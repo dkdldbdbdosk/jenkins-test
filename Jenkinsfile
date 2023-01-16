@@ -19,8 +19,7 @@ pipeline {
             hostPath:
               path: /var/run/docker.sock
           securityContext: 
-            runAsUser: 1000
-            fsGroup: 1000
+            runAsUser: 0
         '''
     }
   }
