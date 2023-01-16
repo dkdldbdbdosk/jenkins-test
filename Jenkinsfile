@@ -27,9 +27,8 @@ podTemplate(yaml: '''
                     mountPath: /var/run
 ''') {
   node(POD_LABEL) {
-    writeFile file: 'Dockerfile', text: 'FROM scratch'
     container('docker') {
-      sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing .'
+      sh 'DOCKER_BUILDKIT=1 docker build --progress plain -t ihp001/jenkins-nginx-test:1.0 ./'
     }
   }
 }
