@@ -27,12 +27,6 @@ containers:
   volumeMounts:
   - name: docker-socket
   mountPath: /var/run
-- name: kubectl
-  image: bitnami/kubectl:1.25.4
-  command:
-  - sleep
-  args:
-  - 99d
 ''') {
   node(POD_LABEL) {
     container('docker') {
