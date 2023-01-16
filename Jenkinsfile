@@ -28,14 +28,10 @@ podTemplate(yaml: '''
 ''') {
   node(POD_LABEL) {
     container('docker') {
-          stages {
-        stage('GitHub Repository Clone') { 
-            steps {
-                
-            }
-        }
+            stage('Clone Repository'){
+        checkout scm
     }
-      sh 'docker build --progress plain -t ihp001/jenkins-nginx-test:1.0 -f ./Dockerfile .'
+        sh 'docker build --progress plain -t ihp001/jenkins-nginx-test:1.0 -f ./Dockerfile .'
     }
   }
 }
