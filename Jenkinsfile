@@ -49,10 +49,10 @@ containers:
         }
     }
     }
-    container('kubectl') {
-        stage('kubectl test') {
-            sh 'kubectl version'
-        }
-    }
+    // container('kubectl') {
+    //     stage('kubectl test') {
+    //         sh 'kubectl version'
+    //     }
+    // }
   }
 }
