@@ -32,7 +32,7 @@ containers:
   command:
   - sleep
   args:
-  - infinity
+  - 99d
 ''') {
   node(POD_LABEL) {
     container('docker') {
