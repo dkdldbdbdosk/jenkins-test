@@ -28,7 +28,13 @@ podTemplate(yaml: '''
 ''') {
   node(POD_LABEL) {
     container('docker') {
-      sh 'ls -l'
+          stages {
+        stage('GitHub Repository Clone') { 
+            steps {
+                
+            }
+        }
+    }
       sh 'docker build --progress plain -t ihp001/jenkins-nginx-test:1.0 -f ./Dockerfile .'
     }
   }
