@@ -31,7 +31,15 @@ podTemplate(yaml: '''
             stage('Clone Repository'){
         checkout scm
     }
-        sh 'docker build --progress plain -t ihp001/jenkins-nginx-test:1.0 -f ./Dockerfile .'
+    stage('Build image') {
+        app = docker.build("ihp001/jenkins-nginx-test")
+    }
+    stage('Push image') {
+        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub'){
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+        }
+    }
     }
   }
 }
