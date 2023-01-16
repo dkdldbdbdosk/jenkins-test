@@ -1,35 +1,35 @@
-pipeline {
-  agent {
-    kubernetes {
-      yaml '''
-        apiVersion: v1
-        kind: Pod
-        spec:
-          containers:
-          - name: docker
-            image: docker:latest
-            command:
-            - cat
-            tty: true
-            volumeMounts:
-             - mountPath: /var/run/docker.sock
-               name: docker-sock
-          volumes:
-          - name: docker-sock
-            hostPath:
-              path: /var/run/docker.sock
-          securityContext: 
-            runAsUser: 0
-        '''
-    }
-  }
-  stages {
-      stage('Build-Docker-Image') {
-      steps {
-        container('docker') {
-          sh 'docker build -t ihp001/jenkins-test-nginx:1.0 ./'
-        }
-      }
+podTemplate(yaml: '''
+              apiVersion: v1
+              kind: Pod
+              spec:
+                volumes:
+                - name: docker-socket
+                  emptyDir: {}
+                containers:
+                - name: docker
+                  image: docker:19.03.1
+                  readinessProbe:
+                    exec:
+                      command: [sh, -c, "ls -S /var/run/docker.sock"]
+                  command:
+                  - sleep
+                  args:
+                  - 99d
+                  volumeMounts:
+                  - name: docker-socket
+                    mountPath: /var/run
+                - name: docker-daemon
+                  image: docker:19.03.1-dind
+                  securityContext:
+                    privileged: true
+                  volumeMounts:
+                  - name: docker-socket
+                    mountPath: /var/run
+''') {
+  node(POD_LABEL) {
+    writeFile file: 'Dockerfile', text: 'FROM scratch'
+    container('docker') {
+      sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing .'
     }
   }
 }
