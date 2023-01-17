@@ -47,6 +47,10 @@ podTemplate(yaml: '''
         }
     }
     }
-    container('kubectl')
+    container('kubectl') {
+      stage('test') {
+        sh 'echo test'
+      }
+    }
   }
 }
