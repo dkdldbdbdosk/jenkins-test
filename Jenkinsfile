@@ -48,11 +48,10 @@ spec:
         }
     }
     }
-    container('kubectl') {
-        stage('kubectl test') {
-            kubeconfig(serverUrl:'https://192.168.35.111:6443',credential:'k8s-test-cluster-config')
+  }
+    stage('kubectl test') {
+        withKubeConfig([credentialsId: 'k8s-test-cluster-config', 'serverUrl': 'https://192.168.35.111:6443']) {
             sh 'kubectl version'
         }
     }
-  }
 }
