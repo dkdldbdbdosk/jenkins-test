@@ -18,6 +18,7 @@ spec:
     container('kubectl') {
       kubeconfig(serverUrl:'https://192.168.35.111:6443',credentialsId:'k8s-test-cluster-config') {
         sh 'kubectl version'
+        sh 'ping 8.8.8.8'
       }
     }
   }
