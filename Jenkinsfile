@@ -27,11 +27,11 @@ spec:
     - name: docker-socket
       mountPath: /var/run
   - name: kubectl
-    image: bitnami/kubectl:1.25.4
+    image: bitnami/kubectl:1.26.0
     command:
     - sleep
     args:
-    - 99d
+    - infinity
 ''') {
   node(POD_LABEL) {
     container('docker') {
@@ -50,6 +50,7 @@ spec:
     }
     container('kubectl') {
         stage('kubectl test') {
+            kubeconfig(serverUrl:'https://192.168.35.111:6443',credential:'k8s-test-cluster-config')
             sh 'kubectl version'
         }
     }
