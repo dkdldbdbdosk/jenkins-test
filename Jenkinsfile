@@ -1,43 +1,36 @@
-podTemplate(
-    yaml: '''
-apiVersion: v1
-kind: Pod
-spec:
-  volumes:
-  - name: docker-socket
-    emptyDir: {}
-  containers:
-  - name: docker
-    image: docker
-    readinessProbe:
-      exec:
-        command: [sh, -c, "ls -S /var/run/docsock"]
-    command:
-    - sleep
-    args:
-    - 99d
-    volumeMounts:
-    - name: docker-socket
-      mountPath: /var/run
-  - name: docker-daemon
-    image: docker:dind
-    securityContext:
-      privileged: true
-    volumeMounts:
-    - name: docker-socket
-      mountPath: /var/run
-  - name: kubectl
-    image: bitnami/kubectl:1.25.4
-    command:
-    - sleep
-    args:
-    - 99d
+podTemplate(yaml: '''
+              apiVersion: v1
+              kind: Pod
+              spec:
+                volumes:
+                - name: docker-socket
+                  emptyDir: {}
+                containers:
+                - name: docker
+                  image: docker
+                  readinessProbe:
+                    exec:
+                      command: [sh, -c, "ls -S /var/run/docker.sock"]
+                  command:
+                  - sleep
+                  args:
+                  - 99d
+                  volumeMounts:
+                  - name: docker-socket
+                    mountPath: /var/run
+                - name: docker-daemon
+                  image: docker:dind
+                  securityContext:
+                    privileged: true
+                  volumeMounts:
+                  - name: docker-socket
+                    mountPath: /var/run
 ''') {
   node(POD_LABEL) {
     container('docker') {
-        stage('Clone Repository') {
-            checkout scm
-            }
+            stage('Clone Repository'){
+        checkout scm
+    }
     stage('Build image') {
         app = docker.build("ihp001/jenkins-nginx-test")
     }
@@ -47,11 +40,6 @@ spec:
             app.push("latest")
         }
     }
-    }
-    container('kubectl') {
-        stage('kubectl test') {
-            sh 'kubectl version'
-        }
     }
   }
 }
