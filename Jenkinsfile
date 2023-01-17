@@ -16,7 +16,7 @@ spec:
 ) {
   node(POD_LABEL) {
     container('kubectl') {
-      kubeconfig(serverUrl:'url',credentialsId:'id') {
+      kubeconfig(serverUrl:'https://192.168.35.111:6443',credentialsId:'k8s-test-cluster-config') {
         sh 'kubectl version'
       }
     }
