@@ -49,7 +49,9 @@ podTemplate(yaml: '''
     }
     container('kubectl') {
       stage('test') {
-        sh 'echo test'
+        kubeconfig(serverUrl:'url',credentialsId:'id') {
+          sh 'kubectl version'
+        }
       }
     }
   }
