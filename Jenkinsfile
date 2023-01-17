@@ -25,6 +25,12 @@ podTemplate(yaml: '''
                   volumeMounts:
                   - name: docker-socket
                     mountPath: /var/run
+                - name: kubectl
+                  image: bitnami/kubectl:1.26.0
+                  command: 
+                  - sleep
+                  args: 
+                  - 99d
 ''') {
   node(POD_LABEL) {
     container('docker') {
@@ -41,5 +47,6 @@ podTemplate(yaml: '''
         }
     }
     }
+    container('kubectl')
   }
 }
